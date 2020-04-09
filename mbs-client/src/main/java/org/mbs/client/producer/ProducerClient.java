@@ -23,6 +23,11 @@ public class ProducerClient {
 
 	private ProducerClient(ProducerConfig producerConfig) {
 		producer = new DefaultMQProducer(producerConfig.getProducerGroup());
+
+		producer.setMaxMessageSize(
+				producerConfig.getMaxMessageSize() < producerConfig.getMaxMessageSize() ? producer.getMaxMessageSize()
+						: producerConfig.getMaxMessageSize());
+
 		producer.setNamesrvAddr(producerConfig.getNamesrvAdd());
 		producer.setSendMsgTimeout(producerConfig.getSendMsgTimeout());
 	}
@@ -68,6 +73,8 @@ public class ProducerClient {
 
 		private int sendMsgTimeout;
 
+		private int maxMessageSize = 0;
+
 		public String getProducerGroup() {
 			return producerGroup;
 		}
@@ -90,6 +97,14 @@ public class ProducerClient {
 
 		public void setSendMsgTimeout(int sendMsgTimeout) {
 			this.sendMsgTimeout = sendMsgTimeout;
+		}
+
+		public int getMaxMessageSize() {
+			return maxMessageSize;
+		}
+
+		public void setMaxMessageSize(int maxMessageSize) {
+			this.maxMessageSize = maxMessageSize;
 		}
 
 		private void isVaildConfig() {
